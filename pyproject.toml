@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "open-source-polarion-docker-repo-template"
 version = "0.1.0"
-description = ""
+description = "Service for python_requirements_inspector"
 authors = [
     "SBB Polarion Team <polarion-opensource@sbb.ch>",
 ]
@@ -10,7 +10,11 @@ readme = "README.md"
 packages = [{include = "app"}]
 
 [tool.poetry.dependencies]
-python = "^3.13"
+python = "^3.12" # This service does not run with 3.13 (failing build backend)
+Flask = "^3.0.3"
+gevent = "^24.2.1"
+python-requirements-inspector = {url = "https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl"}
+
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.0.0"
