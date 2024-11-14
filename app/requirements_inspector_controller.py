@@ -75,6 +75,13 @@ def inspect_workitems() -> Response:
         return process_error(e, "Unknown exception handled during processing", 500)
 
 
+def create_test_app(polarion_requirements_inspector_version: str, polarion_requirements_inspector_service_version: str, content_length_limit: int = (1 << 24)) -> Flask:
+    app.config[POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER.upper()] = polarion_requirements_inspector_version
+    app.config[POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER.upper()] = polarion_requirements_inspector_service_version
+    app.config[CONTENT_LENGTH_LIMIT] = content_length_limit
+    return app
+
+
 def start_server(port: int, polarion_requirements_inspector_version: str, polarion_requirements_inspector_service_version: str, content_length_limit: int) -> None:
     """Starts the Requirements Inspector Service"""
     app.config[POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER.upper()] = polarion_requirements_inspector_version
