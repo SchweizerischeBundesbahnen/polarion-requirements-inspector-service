@@ -1,4 +1,5 @@
 import json
+import logging
 import platform
 import sys
 from typing import TYPE_CHECKING
@@ -22,6 +23,7 @@ class PolarionRequirementsInspectorServiceTest(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.app = create_test_app(cls.polarion_requirements_inspector_version, cls.polarion_requirements_inspector_service_version)
+        logging.disable(logging.CRITICAL)
 
     def test_version(self):
         """_summary_"""
