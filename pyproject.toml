@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "open-source-polarion-docker-repo-template"
-version = "0.1.0"
+name = "polarion-requirements-inspector-service"
+version = "0.0.0"  # the version is controll by pipeline
 description = "Service for python_requirements_inspector"
 authors = [
     "SBB Polarion Team <polarion-opensource@sbb.ch>",
