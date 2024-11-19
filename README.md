@@ -5,9 +5,9 @@ Service providing REST API to use Polarion Requirements Inspector functionality
 
 ```bash
   docker build \
-    --build-arg APP_IMAGE_VERSION=X.Y.Z \
+    --build-arg APP_IMAGE_VERSION=0.0.0-dev \
     --file Dockerfile \
-    --tag <<docker-image-name>>:X.Y.Z
+    --tag polarion-requirements-inspector-service:0.0.0-dev
     .
 ```
 
@@ -16,14 +16,14 @@ Service providing REST API to use Polarion Requirements Inspector functionality
 ```bash
   docker run --detach \
     --publish 9080:9080 \
-    --name <<docker-container-name>> \
-    <<docker-image-name>>:X.Y.Z
+    --name polarion-requirements-inspector-service \
+    polarion-requirements-inspector-service:0.0.0-dev
 ```
 
 ## Stop Docker container
 
 ```bash
-  docker container stop <<docker-container-name>>
+  docker container stop polarion-requirements-inspector-service
 ```
 
 ### Access service
@@ -84,6 +84,6 @@ Polarion Requirements Inspector Service provides the following endpoints:
 ## Testing Docker image
 
 ```bash
-docker build -t open-source-polarion-docker-repo-template:local .
-container-structure-test test --image open-source-polarion-docker-repo-template:local --config .config/container-structure-test.yaml
+docker build -t polarion-requirements-inspector-service:local .
+container-structure-test test --image polarion-requirements-inspector-service:local --config .config/container-structure-test.yaml
 ```
