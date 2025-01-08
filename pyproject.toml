@@ -1,21 +1,23 @@
-[tool.poetry]
+[project]
 name = "polarion-requirements-inspector-service"
 version = "0.0.0"  # the version is controll by pipeline
 description = "Service for python_requirements_inspector"
 authors = [
-    "SBB Polarion Team <polarion-opensource@sbb.ch>",
+    {name = "SBB Polarion Team", email = "polarion-opensource@sbb.ch"},
 ]
 license = "Apache License 2.0"
 readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "flask (>=3.1.0,<4.0.0)",
+    "gevent (>=24.11.1,<25.0.0)",
+    "unittest-xml-reporting (>=3.2.0,<4.0.0)",
+    "python-requirements-inspector @ https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl"
+]
+
+[tool.poetry]
 packages = [{include = "app"}]
-
-[tool.poetry.dependencies]
-python = "^3.12" # This service does not run with 3.13 (failing build backend)
-Flask = "^3.0.3"
-gevent = "^24.2.1"
-python-requirements-inspector = {url = "https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl"}
-unittest-xml-reporting = "^3.2.0"
-
+requires-poetry = ">=2.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.0.0"
