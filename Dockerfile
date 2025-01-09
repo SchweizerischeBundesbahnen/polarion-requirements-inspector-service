@@ -9,10 +9,11 @@ ENV POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION=$APP_IMAGE_VERSION
 WORKDIR ${WORKING_DIR}
 
 COPY requirements.txt ${WORKING_DIR}/requirements.txt
+COPY README.md ${WORKING_DIR}/README.md
 COPY ./app/ ${WORKING_DIR}/app/
 COPY ./poetry.lock ${WORKING_DIR}
 COPY ./pyproject.toml ${WORKING_DIR}
 
-RUN pip install --no-cache-dir -r ${WORKING_DIR}/requirements.txt && poetry install --no-root
+RUN pip install --no-cache-dir -r ${WORKING_DIR}/requirements.txt && poetry install
 
 ENTRYPOINT [ "poetry", "run", "python", "-m", "app.requirements_inspector_service" ]
