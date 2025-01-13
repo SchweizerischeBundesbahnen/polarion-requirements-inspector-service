@@ -13,7 +13,8 @@ dependencies = [
     "gevent (>=24.11.1,<25.0.0)",
     "unittest-xml-reporting (>=3.2.0,<4.0.0)",
     "python-requirements-inspector @ https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl",
-    "murmurhash (==1.0.10)"
+    "murmurhash (==1.0.10)",
+    "cymem (==2.0.8)"
 ]
 
 [tool.poetry]
