@@ -7,7 +7,7 @@ Service providing REST API to use Polarion Requirements Inspector functionality
   docker build \
     --build-arg APP_IMAGE_VERSION=0.0.0-dev \
     --file Dockerfile \
-    --tag polarion-requirements-inspector-service:0.0.0-dev
+    --tag polarion-requirements-inspector-service:0.0.0-dev \
     .
 ```
 
