@@ -3,7 +3,7 @@ name = "polarion-requirements-inspector-service"
 version = "0.0.0"  # the version is controll by pipeline
 description = "Service for python_requirements_inspector"
 authors = [
-    {name = "SBB Polarion Team", email = "polarion-opensource@sbb.ch"},
+    {name="SBB Polarion Team", email="polarion-opensource@sbb.ch"}
 ]
 license = "Apache License 2.0"
 readme = "README.md"
@@ -11,13 +11,13 @@ requires-python = ">=3.12,<3.13"
 dependencies = [
     "flask (>=3.1.0,<4.0.0)",
     "gevent (>=24.11.1,<25.0.0)",
-    "unittest-xml-reporting (>=3.2.0,<4.0.0)",
     "python-requirements-inspector @ https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl",
 ]
 # Note that murmuhash (1.0.10) and cymem (2.0.8) are dependencies of python-requirements-inspector. The github action docker/build-push-action might fail with versions 1.0.11 and 2.0.10 respectively.
 
 [tool.poetry]
 packages = [{include = "app"}]
+requires-poetry = ">=2.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.0.0"
@@ -26,7 +26,6 @@ mypy = "^1.11.2"
 
 [tool.poetry.group.test.dependencies]
 tox = "^4.18.0"
-coverage = "^7.6.4"
 
 [build-system]
 requires = ["poetry-core"]

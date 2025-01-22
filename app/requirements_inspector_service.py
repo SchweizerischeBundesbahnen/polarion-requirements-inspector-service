@@ -24,7 +24,7 @@ def main(port: int, content_length_limit: int) -> None:
     start_server(port, polarion_requirements_inspector_version, polarion_requirements_inspector_service_version, content_length_limit)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", default=9081, type=int, required=False, help="Service port number")
     parser.add_argument(

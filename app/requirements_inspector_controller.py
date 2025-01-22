@@ -82,7 +82,7 @@ def create_test_app(polarion_requirements_inspector_version: str, polarion_requi
     return app
 
 
-def start_server(port: int, polarion_requirements_inspector_version: str, polarion_requirements_inspector_service_version: str, content_length_limit: int) -> None:
+def start_server(port: int, polarion_requirements_inspector_version: str, polarion_requirements_inspector_service_version: str, content_length_limit: int) -> None:  # pragma: no cover
     """Starts the Requirements Inspector Service"""
     app.config[POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER.upper()] = polarion_requirements_inspector_version
     app.config[POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER.upper()] = polarion_requirements_inspector_service_version
