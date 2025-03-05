@@ -60,7 +60,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
       - id: rp
         if: github.event_name != 'pull_request' && github.ref_name == 'main'
-        uses: googleapis/release-please-action@7987652d64b4581673a76e33ad5e98e3dd56832f  # v4
+        uses: googleapis/release-please-action@26ac09bebf9d65ff1137edead58f239dd5a04faa  # v4
         with:
           release-type: simple
           include-v-in-tags: false
