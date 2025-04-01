@@ -27,6 +27,8 @@ mypy = "1.15.0"
 [tool.poetry.group.test.dependencies]
 tox = "^4.18.0"
 coverage = "^7.6.4"
+pytest = "^8.3.5"
+docker = "^7.1.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -58,7 +60,8 @@ extend-select = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = [
-    "S101" # No assert rule (bandit)
+    "S101", # No assert rule (bandit)
+    "PLR2004" # No magic values (pylint)
 ]
 
 [tool.ruff.format]
