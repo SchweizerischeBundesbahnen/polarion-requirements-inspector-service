@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/compare/v3.0.0...v3.1.0) (2025-04-05)
+
+
+### Features
+
+* integrate system tests in github repository ([#94](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/issues/94)) ([eb7dd89](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/eb7dd892f0f8176e7909a58f6a0345de75553b56))
+
 ## 3.0.0 (2024-11-19)
 
 
