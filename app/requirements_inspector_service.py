@@ -10,7 +10,7 @@ from app.constants import POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER
 from app.requirements_inspector_controller import start_server
 
 
-def main(port: int, content_length_limit: int) -> None:
+def main(port: int, request_size_limit: int) -> None:
     logging.getLogger().setLevel(logging.INFO)
     logging.info("Requirements Inspector Service running on port: %d", port)
     logging.getLogger().setLevel(logging.WARNING)
@@ -21,7 +21,7 @@ def main(port: int, content_length_limit: int) -> None:
     if not polarion_requirements_inspector_service_version:
         sys.exit("Service version unknown")
 
-    start_server(port, polarion_requirements_inspector_version, polarion_requirements_inspector_service_version, content_length_limit)
+    start_server(port, polarion_requirements_inspector_version, polarion_requirements_inspector_service_version, request_size_limit)
 
 
 if __name__ == "__main__":

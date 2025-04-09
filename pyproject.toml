@@ -13,6 +13,8 @@ dependencies = [
     "gevent (>=24.11.1,<25.0.0)",
     "unittest-xml-reporting (>=3.2.0,<4.0.0)",
     "python-requirements-inspector @ https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl",
+    "fastapi (>=0.115.12,<0.116.0)",
+    "uvicorn (>=0.34.0,<0.35.0)",
 ]
 # Note that murmuhash (1.0.10) and cymem (2.0.8) are dependencies of python-requirements-inspector. The github action docker/build-push-action might fail with versions 1.0.11 and 2.0.10 respectively.
 
@@ -29,6 +31,7 @@ tox = "^4.18.0"
 coverage = "^7.6.4"
 pytest = "^8.3.5"
 docker = "^7.1.0"
+httpx = "^0.28.1"
 
 [build-system]
 requires = ["poetry-core"]
