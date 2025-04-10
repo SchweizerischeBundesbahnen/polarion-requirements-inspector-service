@@ -74,3 +74,16 @@ def test_inspect_workitems_non_iterable_json(test_params: TestParams):
     with TestClient(test_params.app) as test_client:
         response = test_client.post("/inspect/workitems", json=1)
         assert response.status_code == 422
+
+
+def test_openapi_endpoint(test_params: TestParams):
+    with TestClient(test_params.app) as test_client:
+        response = test_client.get("/static/openapi.json")
+        assert b"/version" in response.content
+        assert b"/inspect/workitems" in response.content
+
+
+def test_docs_endpoint(test_params: TestParams):
+    with TestClient(test_params.app) as test_client:
+        response = test_client.get("/api/docs")
+        assert response.status_code == 200

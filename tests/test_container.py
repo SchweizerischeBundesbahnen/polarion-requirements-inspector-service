@@ -1,7 +1,6 @@
 import importlib
 import importlib.metadata
 import json
-import platform
 import sys
 import time
 from typing import NamedTuple
@@ -42,15 +41,21 @@ def requirements_inspector_container():
     Yields:
         Container: Built docker container
     """
-    client = docker.from_env()
-    image, _ = client.images.build(path=".", tag="requirements_inspector_service", buildargs={"APP_IMAGE_VERSION": requirements_inspector_service_version})
-    container = client.containers.run(image=image, detach=True, name="requirements_inspector_service", ports={"9081": port})
-    time.sleep(5)
+    container = None
+    image = None
+    try:
+        client = docker.from_env()
+        image, _ = client.images.build(path=".", tag="requirements_inspector_service", buildargs={"APP_IMAGE_VERSION": requirements_inspector_service_version})
+        container = client.containers.run(image=image, detach=True, name="requirements_inspector_service", ports={"9081": port})
+        time.sleep(5)
 
-    yield container
-
-    container.stop()
-    container.remove()
+        yield container
+    finally:
+        if container:
+            container.stop()
+            container.remove(v=True)
+        if image:
+            image.remove()
 
 
 @pytest.fixture(scope="module")
@@ -58,7 +63,7 @@ def test_params(requirements_inspector_container: Container):
     base_url = f"http://localhost:{port}"
     session = requests.Session()
     version = VersionSchema(
-        python=platform.python_version(),
+        python="3.12.9",
         polarion_requirements_inspector=requirements_inspector_version,
         polarion_requirements_inspector_service=requirements_inspector_service_version,
     )
@@ -133,3 +138,16 @@ def test_request_size_limit(test_params: TestParams) -> None:
     work_items = [work_item for _ in range(n)]
     res = test_params.session.post(f"{test_params.base_url}/inspect/workitems", data=json.dumps(work_items))
     assert res.status_code == 413
+
+
+def test_openapi_endpoint(test_params: TestParams) -> None:
+    """Test that the openapi docs are available"""
+    res = test_params.session.get(f"{test_params.base_url}/static/openapi.json")
+    assert b"/version" in res.content
+    assert b"/inspect/workitems" in res.content
+
+
+def test_docs_endpoint(test_params: TestParams) -> None:
+    """Test that the docs endpoint works"""
+    res = test_params.session.get(f"{test_params.base_url}/api/docs")
+    assert res.status_code == 200

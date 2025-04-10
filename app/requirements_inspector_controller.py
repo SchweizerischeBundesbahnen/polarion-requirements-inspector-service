@@ -12,6 +12,7 @@ import uvicorn
 from fastapi import FastAPI, HTTPException, Request, Response
 from python_requirements_inspector.workitem_analyzer import WorkitemAnalyzer  # type: ignore
 
+from app.constants import POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER, POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER, PYTHON_VERSION_HEADER
 from app.type_definitions import VersionSchema, WorkItemSchema
 
 if TYPE_CHECKING:
@@ -79,9 +80,9 @@ async def inspect_workitems(work_items: list[WorkItemSchema]) -> Response:
         return Response(
             json.dumps(output_data),
             headers={
-                "python_version": platform.python_version(),
-                "polarion_requirements_inspector_version": config["polarion_requirements_inspector_version"],
-                "polarion_requirements_inspector_service_version": config["polarion_requirements_inspector_service_version"],
+                PYTHON_VERSION_HEADER: platform.python_version(),
+                POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER: config["polarion_requirements_inspector_version"],
+                POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER: config["polarion_requirements_inspector_service_version"],
             },
             media_type="application/json",
             status_code=200,
@@ -94,6 +95,7 @@ def create_test_app(polarion_requirements_inspector_version: str, polarion_requi
     config["polarion_requirements_inspector_version"] = polarion_requirements_inspector_version
     config["polarion_requirements_inspector_service_version"] = polarion_requirements_inspector_service_version
     config["request_size_limit"] = request_size_limit
+    app.version = polarion_requirements_inspector_service_version
     return app
 
 
@@ -102,7 +104,7 @@ def start_server(port: int, polarion_requirements_inspector_version: str, polari
     config["polarion_requirements_inspector_version"] = polarion_requirements_inspector_version
     config["polarion_requirements_inspector_service_version"] = polarion_requirements_inspector_service_version
     config["request_size_limit"] = request_size_limit
-
+    app.version = polarion_requirements_inspector_service_version
     uvicorn.run(app=app, host="", port=port)
 
 
