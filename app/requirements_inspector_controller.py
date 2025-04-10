@@ -5,90 +5,107 @@ Module containing the flask app running the python-requirements-inspector-servic
 import json
 import logging
 import platform
-from typing import TYPE_CHECKING
+from collections.abc import Awaitable, Callable
+from typing import TYPE_CHECKING, TypedDict
 
-from flask import Flask, Response, request
-from gevent.pywsgi import WSGIServer  # type: ignore
+import uvicorn
+from fastapi import FastAPI, HTTPException, Request, Response
 from python_requirements_inspector.workitem_analyzer import WorkitemAnalyzer  # type: ignore
 
-from app.constants import (
-    CONTENT_LENGTH_LIMIT,
-    POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER,
-    POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER,
-    PYTHON_VERSION_HEADER,
-)
-from app.type_definitions import (
-    RequestSizeException,
-    VersionDto,
-)
+from app.constants import POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER, POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER, PYTHON_VERSION_HEADER
+from app.type_definitions import VersionSchema, WorkItemSchema
 
 if TYPE_CHECKING:
-    from python_requirements_inspector.type_definitions import RequirementsInspectorResponseItem, WorkItem  # type: ignore
-
-app = Flask(__name__)
+    from python_requirements_inspector.type_definitions import RequirementsInspectorResponseItem  # type: ignore
 
 
-@app.route("/version")
-def version() -> VersionDto:
+class Config(TypedDict):
+    polarion_requirements_inspector_version: str
+    polarion_requirements_inspector_service_version: str
+    request_size_limit: int
+
+
+config = Config(polarion_requirements_inspector_version="", polarion_requirements_inspector_service_version="", request_size_limit=0)
+
+app = FastAPI(
+    openapi_url="/static/openapi.json",
+    docs_url="/api/docs",
+)
+
+
+@app.middleware("http")
+async def check_request_size(request: Request, call_next: Callable[[Request], Awaitable[Response]]) -> Response:
+    size = len(await request.body())
+
+    if size > config["request_size_limit"]:
+        return Response("JSON Body too large", status_code=413, media_type="plain/text")
+
+    response = await call_next(request)
+    return response
+
+
+@app.get("/version", response_model=VersionSchema)
+async def version() -> VersionSchema:
     """
     Returns:
         VersionDto: python, requirements-inspector and requirements-inspector-service versions
     """
-    return VersionDto(
+    return VersionSchema(
         python=platform.python_version(),
-        polarion_requirements_inspector=app.config[POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER.upper()],
-        polarion_requirements_inspector_service=app.config[POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER.upper()],
+        polarion_requirements_inspector=config["polarion_requirements_inspector_version"],
+        polarion_requirements_inspector_service=config["polarion_requirements_inspector_service_version"],
     )
 
 
-@app.route("/inspect/workitems", methods=["POST"])
-def inspect_workitems() -> Response:
+@app.post(
+    "/inspect/workitems",
+    responses={
+        400: {"content": {"text/plain": {}}, "description": "JSON Body invalid"},
+        413: {"content": {"text/plain": {}}, "description": "JSON Body too large"},
+        500: {"content": {"text/plain": {}}, "description": "Unknown internal Exception handled during processing"},
+    },
+    response_model=WorkItemSchema,
+)
+async def inspect_workitems(work_items: list[WorkItemSchema]) -> Response:
     """
     POST-endpoint to perform requirements inspection on a list of work items of type WorkItem
     Returns:
         list[RequirementsInspectorResponseItem]: List of results of inspected work items
     """
     try:
-        content_length_limit = app.config[CONTENT_LENGTH_LIMIT]
-        if request.content_length > content_length_limit:
-            raise RequestSizeException("JSON File too large")
-        work_items: list[WorkItem] = json.loads(request.data)
         work_item_analyzer = WorkitemAnalyzer()
         for work_item in work_items:
-            work_item_analyzer.analyze_workitem(work_item)
+            work_item_analyzer.analyze_workitem(work_item.model_dump(exclude_none=True))
         output_data: list[RequirementsInspectorResponseItem] = work_item_analyzer.get_collected_data()
         return Response(
             json.dumps(output_data),
             headers={
                 PYTHON_VERSION_HEADER: platform.python_version(),
-                POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER: app.config[POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER.upper()],
-                POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER: app.config[POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER.upper()],
+                POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER: config["polarion_requirements_inspector_version"],
+                POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER: config["polarion_requirements_inspector_service_version"],
             },
-            mimetype="application/json",
-            status=200,
+            media_type="application/json",
+            status_code=200,
         )
-    except RequestSizeException as e:
-        return process_error(e, str(e), 413)
-    except json.JSONDecodeError as e:
-        return process_error(e, "JSON file invalid", 400)
     except Exception as e:  # pylint: disable=broad-except
         return process_error(e, "Unknown exception handled during processing", 500)
 
 
-def create_test_app(polarion_requirements_inspector_version: str, polarion_requirements_inspector_service_version: str, content_length_limit: int = (1 << 24)) -> Flask:
-    app.config[POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER.upper()] = polarion_requirements_inspector_version
-    app.config[POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER.upper()] = polarion_requirements_inspector_service_version
-    app.config[CONTENT_LENGTH_LIMIT] = content_length_limit
+def create_test_app(polarion_requirements_inspector_version: str, polarion_requirements_inspector_service_version: str, request_size_limit: int = (1 << 24)) -> FastAPI:
+    config["polarion_requirements_inspector_version"] = polarion_requirements_inspector_version
+    config["polarion_requirements_inspector_service_version"] = polarion_requirements_inspector_service_version
+    config["request_size_limit"] = request_size_limit
+    app.version = polarion_requirements_inspector_service_version
     return app
 
 
-def start_server(port: int, polarion_requirements_inspector_version: str, polarion_requirements_inspector_service_version: str, content_length_limit: int) -> None:
+def start_server(port: int, polarion_requirements_inspector_version: str, polarion_requirements_inspector_service_version: str, request_size_limit: int) -> None:
     """Starts the Requirements Inspector Service"""
-    app.config[POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER.upper()] = polarion_requirements_inspector_version
-    app.config[POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER.upper()] = polarion_requirements_inspector_service_version
-    app.config[CONTENT_LENGTH_LIMIT] = content_length_limit
-    http_server = WSGIServer(("", port), app)
-    http_server.serve_forever()
+    config["polarion_requirements_inspector_version"] = polarion_requirements_inspector_version
+    config["polarion_requirements_inspector_service_version"] = polarion_requirements_inspector_service_version
+    config["request_size_limit"] = request_size_limit
+    app.version = polarion_requirements_inspector_service_version
+    uvicorn.run(app=app, host="", port=port)
 
 
 def process_error(e: Exception, err_msg: str, status: int) -> Response:
@@ -103,4 +120,4 @@ def process_error(e: Exception, err_msg: str, status: int) -> Response:
         flask.Response: Flask Response object sent back to the client
     """
     logging.exception(e)
-    return Response(err_msg, mimetype="plain/text", status=status)
+    raise HTTPException(status_code=status, detail=err_msg)
