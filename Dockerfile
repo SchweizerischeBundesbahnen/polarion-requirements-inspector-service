@@ -12,8 +12,7 @@ RUN apk add --no-cache \
     libffi-dev \
     cmake \
     make \
-    cython \
-    && rm /var/cache/apk/*
+    cython
 
 ENV WORKING_DIR=/opt/polarion_requirements_inspector
 ENV POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION=$APP_IMAGE_VERSION
