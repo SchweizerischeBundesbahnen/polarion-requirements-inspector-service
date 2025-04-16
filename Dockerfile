@@ -1,7 +1,19 @@
-FROM python:3.12.9-slim@sha256:48a11b7ba705fd53bf15248d1f94d36c39549903c5d59edcfa2f3f84126e7b44
-
+FROM python:3.12.9-alpine3.21@sha256:28b8a72c4e0704dd2048b79830e692e94ac2d43d30c914d54def6abf74448a4e
 LABEL maintainer="SBB Polarion Team <polarion-opensource@sbb.ch>"
+
 ARG APP_IMAGE_VERSION=0.0.0-dev
+
+# hadolint ignore=DL3018
+RUN apk add --no-cache \
+    gcc \
+    g++ \
+    musl-dev \
+    python3-dev \
+    libffi-dev \
+    cmake \
+    make \
+    cython \
+    && rm /var/cache/apk/*
 
 ENV WORKING_DIR=/opt/polarion_requirements_inspector
 ENV POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION=$APP_IMAGE_VERSION
