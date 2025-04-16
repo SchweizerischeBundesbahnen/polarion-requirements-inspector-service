@@ -1,9 +1,9 @@
 """Types for RequirementsInspectorController"""
 
-from typing import TypedDict
+from pydantic import BaseModel, Field
 
 
-class VersionDto(TypedDict):
+class VersionSchema(BaseModel):
     """
     Type Class for the return value of /version
     """
@@ -13,7 +13,8 @@ class VersionDto(TypedDict):
     polarion_requirements_inspector_service: str
 
 
-class RequestSizeException(Exception):
-    """
-    Thrown on POST-endpoint /analyze/workitems if the request size is too large
-    """
+class WorkItemSchema(BaseModel, extra="allow"):
+    id: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    language: str | None = Field(default=None)

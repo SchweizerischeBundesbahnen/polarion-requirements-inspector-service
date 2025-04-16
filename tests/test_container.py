@@ -1,7 +1,6 @@
 import importlib
 import importlib.metadata
 import json
-import platform
 import sys
 import time
 from typing import NamedTuple
@@ -17,7 +16,7 @@ from app.constants import (
     POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER,
     PYTHON_VERSION_HEADER,
 )
-from app.type_definitions import VersionDto
+from app.type_definitions import VersionSchema
 
 port = 9081
 requirements_inspector_version = importlib.metadata.version("python-requirements-inspector")
@@ -29,7 +28,7 @@ class TestParams(NamedTuple):
     port: int
     base_url: str
     session: requests.Session
-    version: VersionDto
+    version: VersionSchema
     container: Container
 
 
@@ -42,23 +41,29 @@ def requirements_inspector_container():
     Yields:
         Container: Built docker container
     """
-    client = docker.from_env()
-    image, _ = client.images.build(path=".", tag="requirements_inspector_service", buildargs={"APP_IMAGE_VERSION": requirements_inspector_service_version})
-    container = client.containers.run(image=image, detach=True, name="requirements_inspector_service", ports={"9081": port})
-    time.sleep(5)
+    container = None
+    image = None
+    try:
+        client = docker.from_env()
+        image, _ = client.images.build(path=".", tag="requirements_inspector_service", buildargs={"APP_IMAGE_VERSION": requirements_inspector_service_version})
+        container = client.containers.run(image=image, detach=True, name="requirements_inspector_service", ports={"9081": port})
+        time.sleep(5)
 
-    yield container
-
-    container.stop()
-    container.remove()
+        yield container
+    finally:
+        if container:
+            container.stop()
+            container.remove(v=True)
+        if image:
+            image.remove()
 
 
 @pytest.fixture(scope="module")
 def test_params(requirements_inspector_container: Container):
     base_url = f"http://localhost:{port}"
     session = requests.Session()
-    version = VersionDto(
-        python=platform.python_version(),
+    version = VersionSchema(
+        python="3.12.9",
         polarion_requirements_inspector=requirements_inspector_version,
         polarion_requirements_inspector_service=requirements_inspector_service_version,
     )
@@ -73,10 +78,10 @@ def test_version(test_params: TestParams) -> None:
     """
     res = test_params.session.get(f"{test_params.base_url}/version")
     assert res.status_code == 200
-    version: VersionDto = res.json()
-    assert version.get("python") == test_params.version.get("python")
-    assert version.get("polarion_requirements_inspector") == test_params.version.get("polarion_requirements_inspector")
-    assert version.get("polarion_requirements_inspector_service") == test_params.version.get("polarion_requirements_inspector_service")
+    version: VersionSchema = res.json()
+    assert version.get("python") == test_params.version.python
+    assert version.get("polarion_requirements_inspector") == test_params.version.polarion_requirements_inspector
+    assert version.get("polarion_requirements_inspector_service") == test_params.version.polarion_requirements_inspector_service
 
 
 def test_response_fields(test_params: TestParams) -> None:
@@ -104,9 +109,9 @@ def test_response_version_headers(test_params: TestParams) -> None:
         json=[WorkItem(title="Example", description="Example", language="en")],
     )
     assert res.status_code == 200
-    assert test_params.version.get("python") == res.headers.get(PYTHON_VERSION_HEADER)
-    assert test_params.version.get("polarion_requirements_inspector") == res.headers.get(POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER)
-    assert test_params.version.get("polarion_requirements_inspector_service") == res.headers.get(POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER)
+    assert res.headers.get(PYTHON_VERSION_HEADER) == test_params.version.python
+    assert res.headers.get(POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER) == test_params.version.polarion_requirements_inspector
+    assert res.headers.get(POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER) == test_params.version.polarion_requirements_inspector_service
 
 
 def test_invalid_json(test_params: TestParams) -> None:
@@ -117,13 +122,13 @@ def test_invalid_json(test_params: TestParams) -> None:
         headers={"Content-Type": "application/json", "Accept": "application/json"},
         timeout=10000,
     )
-    assert res.status_code == 400
+    assert res.status_code == 422
 
 
 def test_non_iterable_json(test_params: TestParams) -> None:
     """Test an object that is not iterable. Should return 500"""
     res = test_params.session.post(f"{test_params.base_url}/inspect/workitems", data="1")
-    assert res.status_code == 500
+    assert res.status_code == 422
 
 
 def test_request_size_limit(test_params: TestParams) -> None:
@@ -133,3 +138,16 @@ def test_request_size_limit(test_params: TestParams) -> None:
     work_items = [work_item for _ in range(n)]
     res = test_params.session.post(f"{test_params.base_url}/inspect/workitems", data=json.dumps(work_items))
     assert res.status_code == 413
+
+
+def test_openapi_endpoint(test_params: TestParams) -> None:
+    """Test that the openapi docs are available"""
+    res = test_params.session.get(f"{test_params.base_url}/static/openapi.json")
+    assert b"/version" in res.content
+    assert b"/inspect/workitems" in res.content
+
+
+def test_docs_endpoint(test_params: TestParams) -> None:
+    """Test that the docs endpoint works"""
+    res = test_params.session.get(f"{test_params.base_url}/api/docs")
+    assert res.status_code == 200
