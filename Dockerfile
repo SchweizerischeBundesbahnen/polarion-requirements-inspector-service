@@ -1,4 +1,4 @@
-FROM python:3.12.9-slim@sha256:48a11b7ba705fd53bf15248d1f94d36c39549903c5d59edcfa2f3f84126e7b44
+FROM python:3.13.5-slim@sha256:f2fdaec50160418e0c2867ba3e254755edd067171725886d5d303fd7057bbf81
 
 LABEL maintainer="SBB Polarion Team <polarion-opensource@sbb.ch>"
 ARG APP_IMAGE_VERSION=0.0.0-dev
