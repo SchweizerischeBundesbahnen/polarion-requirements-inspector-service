@@ -8,16 +8,26 @@ authors = [
 license = "Apache License 2.0"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
-dependencies = [
-    "python-requirements-inspector @ https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl",
-    "fastapi==0.115.12",
-    "uvicorn==0.34.2",
-]
-# Note that murmuhash (1.0.10) and cymem (2.0.8) are dependencies of python-requirements-inspector. The GitHub action docker/build-push-action might fail with versions 1.0.11 and 2.0.10 respectively.
+dynamic = ["dependencies"]
+# Dependencies moved back to [tool.poetry.dependencies] for Renovate compatibility
+# See: https://github.com/renovatebot/renovate/issues/33509
+# TODO: Migrate back to [project.dependencies] when Renovate adds Poetry v2 support
+# dependencies = [
+#     "python-requirements-inspector @ https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl",
+#     "fastapi==0.115.12",
+#     "uvicorn==0.34.2",
+# ]
 
 [tool.poetry]
 packages = [{include = "app"}]
-requires-poetry = ">=2.0"
+
+# this duplication and legacy format must be kept until Renovate support is added for [project.dependencies] for poetry-lock updates
+# for more information check comments above
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+python-requirements-inspector = {url = "https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl"}
+fastapi = "0.115.12"
+uvicorn = "0.34.2"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "4.2.0"
@@ -26,10 +36,10 @@ mypy = "1.16.1"
 
 [tool.poetry.group.test.dependencies]
 tox = "4.27.0"
-coverage = "7.9.2"
-pytest = "8.4.1"
 docker = "7.1.0"
+pytest = "8.4.1"
 httpx = "0.28.1"
+coverage = "7.9.2"
 
 [build-system]
 requires = ["poetry-core"]
@@ -39,6 +49,9 @@ build-backend = "poetry.core.masonry.api"
 line-length = 240
 fix = true
 show-fixes = true
+exclude = [
+    "tests/*"  # Exclude all test files from linting
+]
 
 [tool.ruff.lint]
 extend-select = [
@@ -71,4 +84,4 @@ line-ending = "lf"
 [tool.mypy]
 explicit_package_bases = true
 disallow_untyped_defs = true
-exclude = "tests/.*"
+exclude = "tests/.*|venv/.*"
