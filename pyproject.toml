@@ -7,7 +7,7 @@ authors = [
 ]
 license = "Apache License 2.0"
 readme = "README.md"
-requires-python = ">=3.12,<3.13"
+requires-python = ">=3.13,<3.14"
 dynamic = ["dependencies"]
 # Dependencies moved back to [tool.poetry.dependencies] for Renovate compatibility
 # See: https://github.com/renovatebot/renovate/issues/33509
@@ -24,7 +24,7 @@ packages = [{include = "app"}]
 # this duplication and legacy format must be kept until Renovate support is added for [project.dependencies] for poetry-lock updates
 # for more information check comments above
 [tool.poetry.dependencies]
-python = ">=3.12,<3.13"
+python = ">=3.13,<3.14"
 python-requirements-inspector = {url = "https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl"}
 fastapi = "0.115.12"
 uvicorn = "0.34.2"
