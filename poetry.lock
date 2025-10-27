@@ -1740,14 +1740,14 @@ files = [
 
 [[package]]
 name = "smart-open"
-version = "7.3.1"
+version = "7.4.1"
 description = "Utils for streaming large files (S3, HDFS, GCS, SFTP, Azure Blob Storage, gzip, bz2, zst...)"
 optional = false
-python-versions = "<4.0,>=3.8"
+python-versions = "<4.0,>=3.9"
 groups = ["main"]
 files = [
-    {file = "smart_open-7.3.1-py3-none-any.whl", hash = "sha256:e243b2e7f69d6c0c96dd763d6fbbedbb4e0e4fc6d74aa007acc5b018d523858c"},
-    {file = "smart_open-7.3.1.tar.gz", hash = "sha256:b33fee8dffd206f189d5e704106a8723afb4210d2ff47e0e1f7fbe436187a990"},
+    {file = "smart_open-7.4.1-py3-none-any.whl", hash = "sha256:f52cb9bc897c7676dfc6996735332bd2465dfb048c73bfa9dfcdc829f48018cc"},
+    {file = "smart_open-7.4.1.tar.gz", hash = "sha256:5c20f09026875e6dec708e9610e0cd13d24d91f0a2c12e6511b9e478a566b4a0"},
 ]
 
 [package.dependencies]
@@ -1758,11 +1758,11 @@ all = ["smart_open[azure,gcs,http,s3,ssh,webhdfs,zst]"]
 azure = ["azure-common", "azure-core", "azure-storage-blob"]
 gcs = ["google-cloud-storage (>=2.6.0)"]
 http = ["requests"]
-s3 = ["boto3"]
+s3 = ["boto3 (>=1.9.17)"]
 ssh = ["paramiko"]
-test = ["awscli", "moto[server]", "numpy", "pyopenssl", "pytest", "pytest-rerunfailures", "pytest_benchmark", "responses", "smart_open[all]"]
+test = ["awscli", "flake8", "moto[server]", "numpy", "pyopenssl", "pytest", "pytest-rerunfailures", "pytest-timeout", "pytest-xdist[psutil]", "pytest_benchmark", "responses", "smart_open[all]"]
 webhdfs = ["requests"]
-zst = ["zstandard"]
+zst = ["backports.zstd (>=1.0.0) ; python_version < \"3.14\""]
 
 [[package]]
 name = "sniffio"
@@ -2089,14 +2089,14 @@ telegram = ["requests"]
 
 [[package]]
 name = "typer"
-version = "0.19.2"
+version = "0.20.0"
 description = "Typer, build great CLIs. Easy to code. Based on Python type hints."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "typer-0.19.2-py3-none-any.whl", hash = "sha256:755e7e19670ffad8283db353267cb81ef252f595aa6834a0d1ca9312d9326cb9"},
-    {file = "typer-0.19.2.tar.gz", hash = "sha256:9ad824308ded0ad06cc716434705f691d4ee0bfd0fb081839d2e426860e7fdca"},
+    {file = "typer-0.20.0-py3-none-any.whl", hash = "sha256:5b463df6793ec1dca6213a3cf4c0f03bc6e322ac5e16e13ddd622a889489784a"},
+    {file = "typer-0.20.0.tar.gz", hash = "sha256:1aaf6494031793e4876fb0bacfa6a912b551cf43c1e63c800df8b1a866720c37"},
 ]
 
 [package.dependencies]
