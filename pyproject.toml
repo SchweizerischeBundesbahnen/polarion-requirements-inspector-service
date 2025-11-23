@@ -30,7 +30,7 @@ fastapi = "0.121.3"
 uvicorn = "0.38.0"
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "4.4.0"
+pre-commit = "4.5.0"
 ruff = "0.14.6"
 mypy = "1.18.2"
 
