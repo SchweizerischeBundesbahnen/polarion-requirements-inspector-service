@@ -26,7 +26,7 @@ packages = [{include = "app"}]
 [tool.poetry.dependencies]
 python = ">=3.12,<3.13"
 python-requirements-inspector = {url = "https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl"}
-fastapi = "0.122.0"
+fastapi = "0.123.0"
 uvicorn = "0.38.0"
 
 [tool.poetry.group.dev.dependencies]
