@@ -37,7 +37,7 @@ mypy = "1.19.0"
 [tool.poetry.group.test.dependencies]
 tox = "4.32.0"
 docker = "7.1.0"
-pytest = "9.0.1"
+pytest = "9.0.2"
 httpx = "0.28.1"
 coverage = "7.12.0"
 
