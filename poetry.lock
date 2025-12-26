@@ -588,14 +588,14 @@ url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_m
 
 [[package]]
 name = "fastapi"
-version = "0.127.0"
+version = "0.127.1"
 description = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "fastapi-0.127.0-py3-none-any.whl", hash = "sha256:725aa2bb904e2eff8031557cf4b9b77459bfedd63cae8427634744fd199f6a49"},
-    {file = "fastapi-0.127.0.tar.gz", hash = "sha256:5a9246e03dcd1fdb19f1396db30894867c1d630f5107dc167dcbc5ed1ea7d259"},
+    {file = "fastapi-0.127.1-py3-none-any.whl", hash = "sha256:31d670a4f9373cc6d7994420f98e4dc46ea693145207abc39696746c83a44430"},
+    {file = "fastapi-0.127.1.tar.gz", hash = "sha256:946a87ee5d931883b562b6bada787d6c8178becee2683cb3f9b980d593206359"},
 ]
 
 [package.dependencies]
@@ -2443,4 +2443,4 @@ dev = ["pytest", "setuptools"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.13"
-content-hash = "ccf955d3c47424771c48b6b57ed11f6106278d621153b7e0bb0c3cd652614a03"
+content-hash = "477eb156c64b952e461b582f4ddee4bf821ea47fcbec18c3347bf15910ac5d26"
