@@ -35,7 +35,7 @@ ruff = "0.14.11"
 mypy = "1.19.1"
 
 [tool.poetry.group.test.dependencies]
-tox = "4.34.0"
+tox = "4.34.1"
 docker = "7.1.0"
 pytest = "9.0.2"
 httpx = "0.28.1"
