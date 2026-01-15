@@ -31,7 +31,7 @@ uvicorn = "0.40.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "4.5.1"
-ruff = "0.14.11"
+ruff = "0.14.13"
 mypy = "1.19.1"
 
 [tool.poetry.group.test.dependencies]
