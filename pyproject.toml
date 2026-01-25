@@ -39,7 +39,7 @@ tox = "4.34.1"
 docker = "7.1.0"
 pytest = "9.0.2"
 httpx = "0.28.1"
-coverage = "7.13.1"
+coverage = "7.13.2"
 
 [build-system]
 requires = ["poetry-core"]
