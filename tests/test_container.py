@@ -46,7 +46,7 @@ def requirements_inspector_container():
     try:
         client = docker.from_env()
         image, _ = client.images.build(path=".", tag="requirements_inspector_service", buildargs={"APP_IMAGE_VERSION": requirements_inspector_service_version})
-        container = client.containers.run(image=image, detach=True, name="requirements_inspector_service", ports={"9081": port})
+        container = client.containers.run(image=image, detach=True, name="requirements_inspector_service", ports={"9081": port}, init=True)
         time.sleep(5)
 
         yield container
