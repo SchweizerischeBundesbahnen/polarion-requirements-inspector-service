@@ -5,45 +5,37 @@ description = "Service for python_requirements_inspector"
 authors = [
     {name = "SBB Polarion Team", email = "polarion-opensource@sbb.ch"},
 ]
-license = "Apache License 2.0"
+license = {text = "Apache License 2.0"}
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
-dynamic = ["dependencies"]
-# Dependencies moved back to [tool.poetry.dependencies] for Renovate compatibility
-# See: https://github.com/renovatebot/renovate/issues/33509
-# TODO: Migrate back to [project.dependencies] when Renovate adds Poetry v2 support
-# dependencies = [
-#     "python-requirements-inspector @ https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl",
-#     "fastapi==0.115.12",
-#     "uvicorn==0.34.2",
-# ]
 
-[tool.poetry]
-packages = [{include = "app"}]
+dependencies = [
+    "python-requirements-inspector @ https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl",
+    "fastapi==0.115.12",
+    "uvicorn==0.34.2",
+]
 
-# this duplication and legacy format must be kept until Renovate support is added for [project.dependencies] for poetry-lock updates
-# for more information check comments above
-[tool.poetry.dependencies]
-python = ">=3.12,<3.13"
-python-requirements-inspector = {url = "https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl"}
-fastapi = "0.133.0"
-uvicorn = "0.41.0"
+[dependency-groups]
+dev = [
+    "pre-commit==4.5.1",
+    "ruff==0.14.14",
+    "mypy==1.19.1",
+]
+test = [
+    "tox==4.34.1",
+    # for debug source code for pytest --> see tox.ini section [testenv]
+    "docker==7.1.0",
+    "pytest==9.0.2",
+    "httpx==0.28.1",
+    "coverage==7.13.2",
+]
 
-[tool.poetry.group.dev.dependencies]
-pre-commit = "4.5.1"
-ruff = "0.15.2"
-mypy = "1.19.1"
-
-[tool.poetry.group.test.dependencies]
-tox = "4.45.0"
-docker = "7.1.0"
-pytest = "9.0.2"
-httpx = "0.28.1"
-coverage = "7.13.4"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.uv]
+# Set to false because this project is an application, not a library
+package = false
+override-dependencies = [
+    "numpy>=1.25,<2.0"  # Compatible with spacy 3.7.5 and thinc 8.2.4
+]
 
 [tool.ruff]
 line-length = 240
@@ -73,9 +65,9 @@ extend-select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = [
+"tests/**" = [
     "S101", # No assert rule (bandit)
-    "PLR2004" # No magic values (pylint)
+    "PLR2004", # No magic values (pylint)
 ]
 
 [tool.ruff.format]
@@ -84,4 +76,13 @@ line-ending = "lf"
 [tool.mypy]
 explicit_package_bases = true
 disallow_untyped_defs = true
-exclude = "tests/.*|venv/.*"
+exclude = "tests/.*"
+install_types = true
+non_interactive = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]

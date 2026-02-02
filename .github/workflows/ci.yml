@@ -24,17 +24,18 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
-      - name: 🧱 Install Poetry
-        run: curl -sSL https://install.python-poetry.org | python3 -
-      - name: 🧱 Setup Python
+      - name: Set up Python from .tool-versions
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6.2.0
         with:
-          python-version: '3.12'
-          cache: poetry
+          python-version-file: .tool-versions
+      - name: 🧱 Install uv
+        uses: astral-sh/setup-uv@61cb8a9741eeb8a550a1b8544337180c0fc8476b  # v7.2.0
+        with:
+          enable-cache: true
       - name: 🧱 Install dependencies
-        run: poetry install --all-extras
+        run: uv sync --all-groups
       - name: 🧪 Run tests
-        run: poetry run tox
+        run: uv run tox
       - name: SonarCloud scan for PR
         uses: sonarsource/sonarqube-scan-action@a31c9398be7ace6bbfaf30c0bd5d415f843d45e9  # v7.0.0
         if: github.event_name == 'pull_request'
