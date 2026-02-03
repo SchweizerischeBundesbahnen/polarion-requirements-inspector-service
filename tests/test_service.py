@@ -1,7 +1,7 @@
 import logging
-import subprocess
-import sys
+import os
 
+from app.constants import POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER
 from app.requirements_inspector_service import main
 from unittest.mock import patch
 from app.requirements_inspector_service import parse_args
@@ -15,17 +15,14 @@ def test_sys_exit():
     except SystemExit:
         pass
 
-def test_run_main_with_args():
-    result = subprocess.run(
-        [sys.executable, "-m", "app.requirements_inspector_service", 
-         "--port", "9082", "--request-size-limit", "1000000", "--log-level", "DEBUG"],
-        timeout=30
-    )
+def test_main_with_args():
     try:
-        result.check_returncode()
+        os.environ[POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER.upper()] = "1.0.0"
+        main(-1, 0, "INFO")
         raise AssertionError("System did not exit")
-    except subprocess.CalledProcessError:
+    except SystemExit:
         pass
+
 
 def test_parse_args_with_defaults():
     with patch('sys.argv', ['prog']):
