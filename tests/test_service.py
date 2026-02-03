@@ -1,4 +1,6 @@
 import logging
+import subprocess
+import sys
 
 from app.requirements_inspector_service import main
 from unittest.mock import patch
@@ -9,8 +11,20 @@ def test_sys_exit():
     logging.disable(logging.CRITICAL)
     try:
         main(0, 0, "INFO")
-        raise AssertionError()
+        raise AssertionError("System did not exit")
     except SystemExit:
+        pass
+
+def test_run_main_with_args():
+    result = subprocess.run(
+        [sys.executable, "-m", "app.requirements_inspector_service", 
+         "--port", "9082", "--request-size-limit", "1000000", "--log-level", "DEBUG"],
+        timeout=30
+    )
+    try:
+        result.check_returncode()
+        raise AssertionError("System did not exit")
+    except subprocess.CalledProcessError:
         pass
 
 def test_parse_args_with_defaults():
