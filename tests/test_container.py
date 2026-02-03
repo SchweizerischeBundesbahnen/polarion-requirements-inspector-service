@@ -4,6 +4,7 @@ import json
 import sys
 import time
 from typing import NamedTuple
+import re
 
 import docker
 import pytest
@@ -55,7 +56,7 @@ def requirements_inspector_container():
             "--tag",
             "requirements_inspector_service",
             "."
-        ])
+        ], check=True)
         if build_process.returncode != 0:
             raise Exception("Build process failed")
         container = client.containers.run(image="requirements_inspector_service", detach=True, name="requirements_inspector_service", ports={"9081": port}, init=True)
@@ -70,15 +71,22 @@ def requirements_inspector_container():
             "image",
             "rm",
             "requirements_inspector_service"
-        ])
+        ], check=True)
 
 
 @pytest.fixture(scope="module")
 def test_params(requirements_inspector_container: Container):
     base_url = f"http://localhost:{port}"
     session = requests.Session()
+    python_version_pattern = re.compile(r"python (\d\.\d{1,2}.\d{1,2})")
+    python_version = ""
+    with open(".tool-versions", "r", encoding="utf-8") as tool_versions:
+        match = re.search(python_version_pattern, tool_versions.read())
+        if not match:
+            raise ValueError("Python version not found")
+        python_version = match.group(1)
     version = VersionSchema(
-        python="3.12.7",
+        python=python_version,
         polarion_requirements_inspector=requirements_inspector_version,
         polarion_requirements_inspector_service=requirements_inspector_service_version,
     )
