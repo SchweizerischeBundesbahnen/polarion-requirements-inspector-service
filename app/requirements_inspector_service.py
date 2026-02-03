@@ -39,5 +39,5 @@ def parse_args() -> tuple[int, int, str]:
     return (args.port, args.request_size_limit, args.log_level)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main(*parse_args())
