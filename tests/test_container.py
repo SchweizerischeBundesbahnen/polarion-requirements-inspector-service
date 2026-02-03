@@ -1,7 +1,6 @@
 import importlib
 import importlib.metadata
 import json
-import re
 import sys
 import time
 from typing import NamedTuple
@@ -44,7 +43,6 @@ def requirements_inspector_container():
         Container: Built docker container
     """
     container = None
-    image = None
     try:
         client = docker.from_env()
         build_process = subprocess.run([
