@@ -35,7 +35,7 @@ jobs:
       - name: 🧱 Install dependencies
         run: uv sync --all-groups
       - name: 🧪 Run tests
-        run: uv run tox
+        run: DOCKER_BUILDKIT=1 uv run tox
       - name: SonarCloud scan for PR
         uses: sonarsource/sonarqube-scan-action@a31c9398be7ace6bbfaf30c0bd5d415f843d45e9  # v7.0.0
         if: github.event_name == 'pull_request'
