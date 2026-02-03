@@ -24,7 +24,7 @@ def main(port: int, request_size_limit: int, log_level: str) -> None:
     start_server(port, polarion_requirements_inspector_version, polarion_requirements_inspector_service_version, request_size_limit)
 
 
-if __name__ == "__main__":
+def parse_args() -> tuple[int, int, str]:
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", default=9081, type=int, required=False, help="Service port number")
     parser.add_argument(
@@ -36,4 +36,8 @@ if __name__ == "__main__":
     )
     parser.add_argument("--log-level", default="WARNING", type=str, required=False, help="Service log level")
     args = parser.parse_args()
-    main(args.port, args.request_size_limit, args.log_level)
+    return (args.port, args.request_size_limit, args.log_level)
+
+
+if __name__ == "__main__":
+    main(*parse_args())
