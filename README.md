@@ -15,7 +15,8 @@ Service providing REST API to use Polarion Requirements Inspector functionality
 
 ```bash
   docker run --detach \
-    --publish 9080:9080 \
+    --init \
+    --publish 9081:9081 \
     --name polarion-requirements-inspector-service \
     polarion-requirements-inspector-service:0.0.0-dev
 ```
