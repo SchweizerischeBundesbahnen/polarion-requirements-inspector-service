@@ -5,7 +5,7 @@ description = "Service for python_requirements_inspector"
 authors = [
     {name = "SBB Polarion Team", email = "polarion-opensource@sbb.ch"},
 ]
-license = {text = "Apache License 2.0"}
+license = "Apache-2.0"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 
@@ -36,6 +36,9 @@ package = false
 override-dependencies = [
     "numpy>=1.25,<2.0"  # Compatible with spacy 3.7.5 and thinc 8.2.4
 ]
+
+[tool.setuptools]
+packages = ["app"]
 
 [tool.ruff]
 line-length = 240
