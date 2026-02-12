@@ -2137,26 +2137,26 @@ torch = ["torch (>=1.6.0)"]
 
 [[package]]
 name = "tox"
-version = "4.34.1"
+version = "4.35.0"
 description = "tox is a generic virtualenv management and test command line tool"
 optional = false
 python-versions = ">=3.10"
 groups = ["test"]
 files = [
-    {file = "tox-4.34.1-py3-none-any.whl", hash = "sha256:5610d69708bab578d618959b023f8d7d5d3386ed14a2392aeebf9c583615af60"},
-    {file = "tox-4.34.1.tar.gz", hash = "sha256:ef1e82974c2f5ea02954d590ee0b967fad500c3879b264ea19efb9a554f3cc60"},
+    {file = "tox-4.35.0-py3-none-any.whl", hash = "sha256:282aa2e1f96328ad197ee09878ff241610426cd8ec01e62a04eb51c987da922d"},
+    {file = "tox-4.35.0.tar.gz", hash = "sha256:74d2fe33eb37233d506f854196bd7bd7e2fbb79e8d9b4bed214ab3da98740876"},
 ]
 
 [package.dependencies]
-cachetools = ">=6.2.4"
+cachetools = ">=6.2.5"
 chardet = ">=5.2"
 colorama = ">=0.4.6"
-filelock = ">=3.20.2"
-packaging = ">=25"
+filelock = ">=3.20.3"
+packaging = ">=26"
 platformdirs = ">=4.5.1"
 pluggy = ">=1.6"
 pyproject-api = ">=1.10"
-virtualenv = ">=20.35.4"
+virtualenv = ">=20.36.1"
 
 [[package]]
 name = "tqdm"
@@ -2430,4 +2430,4 @@ dev = ["pytest", "setuptools"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.13"
-content-hash = "42daf5e34c53415e3ae41d73212f78638ee472d3d6617ca32749e4e37d076504"
+content-hash = "c14005e01c26b267f6d38d0317c70dd43a18b1b29a76e39d75c2cef671746330"
