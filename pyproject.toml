@@ -27,7 +27,7 @@ packages = [{include = "app"}]
 python = ">=3.12,<3.13"
 python-requirements-inspector = {url = "https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl"}
 fastapi = "0.129.0"
-uvicorn = "0.40.0"
+uvicorn = "0.41.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "4.5.1"
