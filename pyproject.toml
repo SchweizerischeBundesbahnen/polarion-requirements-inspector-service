@@ -5,7 +5,7 @@ description = "Service for python_requirements_inspector"
 authors = [
     {name = "SBB Polarion Team", email = "polarion-opensource@sbb.ch"},
 ]
-license = "Apache License 2.0"
+license = "Apache-2.0"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 
