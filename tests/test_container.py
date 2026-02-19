@@ -46,7 +46,7 @@ def requirements_inspector_container():
     container = None
     try:
         client = docker.from_env()
-        build_process = subprocess.run([
+        subprocess.run([
             "docker",
             "build",
             "--build-arg",
@@ -57,8 +57,6 @@ def requirements_inspector_container():
             "requirements_inspector_service",
             "."
         ], check=True)
-        if build_process.returncode != 0:
-            raise Exception("Build process failed")
         container = client.containers.run(image="requirements_inspector_service", detach=True, name="requirements_inspector_service", ports={"9081": port}, init=True)
         time.sleep(5)
         yield container
