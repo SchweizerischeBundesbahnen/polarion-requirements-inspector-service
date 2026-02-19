@@ -10,4 +10,4 @@ echo "Starting Requirements Inspector service on port $PORT with log level $LOG_
 LOG_LEVEL_LOWER=$(echo "$LOG_LEVEL" | tr '[:upper:]' '[:lower:]')
 
 # Execute the service application with python
-exec python -m app.requirements_inspector_service --port $PORT --log-level $LOG_LEVEL --request-size-limit $REQUEST_SIZE_LIMIT
+exec python -m app.requirements_inspector_service --port $PORT --log-level $LOG_LEVEL_LOWER --request-size-limit $REQUEST_SIZE_LIMIT
