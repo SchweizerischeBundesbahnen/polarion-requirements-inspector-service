@@ -16,12 +16,13 @@ def test_sys_exit():
         pass
 
 def test_main_with_args():
-    try:
-        os.environ[POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER.upper()] = "1.0.0"
-        main(-1, 0, "INFO")
-        raise AssertionError("System did not exit")
-    except SystemExit:
-        pass
+    env_key = POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER.upper()
+    with patch.dict(os.environ, {env_key: "1.0.0"}, clear=False):
+        try:
+            main(-1, 0, "INFO")
+            raise AssertionError("System did not exit")
+        except SystemExit:
+            pass
 
 
 def test_parse_args_with_defaults():
