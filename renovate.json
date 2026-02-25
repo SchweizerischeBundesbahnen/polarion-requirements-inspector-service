@@ -2,5 +2,19 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "github>SchweizerischeBundesbahnen/casc-renovate-preset-polarion-docker"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Track python-requirements-inspector GitHub release WHL URL",
+      "fileMatch": ["^pyproject\\.toml$"],
+      "matchStrings": [
+        "python-requirements-inspector @ https://github\\.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/(?<currentValue>[^/]+)/python_requirements_inspector-[^\"]+\\.whl"
+      ],
+      "autoReplaceStringTemplate": "python-requirements-inspector @ https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/{{{newValue}}}/python_requirements_inspector-{{{newValue}}}-py3-none-any.whl",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "SchweizerischeBundesbahnen/python-requirements-inspector",
+      "versioningTemplate": "semver"
+    }
   ]
 }
