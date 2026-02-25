@@ -18,11 +18,11 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pre-commit==4.5.1",
-    "ruff==0.14.14",
+    "ruff==0.15.2",
     "mypy==1.19.1",
 ]
 test = [
-    "tox==4.34.1",
+    "tox==4.44.0",
     # for debug source code for pytest --> see tox.ini section [testenv]
     "docker==7.1.0",
     "pytest==9.0.2",

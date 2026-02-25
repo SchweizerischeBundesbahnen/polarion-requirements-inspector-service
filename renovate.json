@@ -7,7 +7,9 @@
     {
       "customType": "regex",
       "description": "Track python-requirements-inspector GitHub release WHL URL",
-      "fileMatch": ["^pyproject\\.toml$"],
+      "managerFilePatterns": [
+        "/^pyproject\\.toml$/"
+      ],
       "matchStrings": [
         "python-requirements-inspector @ https://github\\.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/(?<currentValue>[^/]+)/python_requirements_inspector-[^\"]+\\.whl"
       ],
