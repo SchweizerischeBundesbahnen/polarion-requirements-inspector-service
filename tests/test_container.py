@@ -69,7 +69,7 @@ def requirements_inspector_container():
             "image",
             "rm",
             "requirements_inspector_service"
-        ], check=True)
+        ], check=False)
 
 
 @pytest.fixture(scope="module")

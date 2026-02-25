@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # Use environment variables with defaults already set in Dockerfile
 BUILD_TIMESTAMP="$(cat /opt/requirements_inspector/.build_timestamp)"
