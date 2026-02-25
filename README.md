@@ -53,7 +53,7 @@ Polarion Requirements Inspector Service provides the following endpoints:
 
 <details>
   <summary>
-    <code>POST</code> <code>/analyze/workitems</code>
+    <code>POST</code> <code>/inspect/workitems</code>
   </summary>
 
 ##### Body
