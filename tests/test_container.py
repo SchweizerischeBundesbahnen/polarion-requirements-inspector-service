@@ -4,12 +4,14 @@ import json
 import sys
 import time
 from typing import NamedTuple
+import re
 
 import docker
 import pytest
 import requests
 from docker.models.containers import Container
 from python_requirements_inspector.type_definitions import RequirementsInspectorResponseItem, WorkItem
+import subprocess
 
 from app.constants import (
     POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER,
@@ -42,28 +44,47 @@ def requirements_inspector_container():
         Container: Built docker container
     """
     container = None
-    image = None
     try:
         client = docker.from_env()
-        image, _ = client.images.build(path=".", tag="requirements_inspector_service", buildargs={"APP_IMAGE_VERSION": requirements_inspector_service_version})
-        container = client.containers.run(image=image, detach=True, name="requirements_inspector_service", ports={"9081": port})
+        subprocess.run([
+            "docker",
+            "build",
+            "--build-arg",
+            f"APP_IMAGE_VERSION={requirements_inspector_service_version}",
+            "--file",
+            "Dockerfile",
+            "--tag",
+            "requirements_inspector_service",
+            "."
+        ], check=True)
+        container = client.containers.run(image="requirements_inspector_service", detach=True, name="requirements_inspector_service", ports={"9081": port}, init=True)
         time.sleep(5)
-
         yield container
     finally:
         if container:
             container.stop()
             container.remove(v=True)
-        if image:
-            image.remove()
+        subprocess.run([
+            "docker",
+            "image",
+            "rm",
+            "requirements_inspector_service"
+        ], check=False)
 
 
 @pytest.fixture(scope="module")
 def test_params(requirements_inspector_container: Container):
     base_url = f"http://localhost:{port}"
     session = requests.Session()
+    python_version_pattern = re.compile(r"python (\d\.\d{1,2}.\d{1,2})")
+    python_version = ""
+    with open(".tool-versions", "r", encoding="utf-8") as tool_versions:
+        match = re.search(python_version_pattern, tool_versions.read())
+        if not match:
+            raise ValueError("Python version not found")
+        python_version = match.group(1)
     version = VersionSchema(
-        python="3.12.9",
+        python=python_version,
         polarion_requirements_inspector=requirements_inspector_version,
         polarion_requirements_inspector_service=requirements_inspector_service_version,
     )

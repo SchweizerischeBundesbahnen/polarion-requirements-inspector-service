@@ -1,19 +1,78 @@
-FROM python:3.12.9-slim@sha256:48a11b7ba705fd53bf15248d1f94d36c39549903c5d59edcfa2f3f84126e7b44
+# Red Hat Universal Base Image (UBI) - glibc-based, pre-compiled wheels work!
+# Copy uv from official image (version matches .tool-versions)
+FROM ghcr.io/astral-sh/uv:0.10.4@sha256:4cac394b6b72846f8a85a7a0e577c6d61d4e17fe2ccee65d9451a8b3c9efb4ac AS uv-source
 
-LABEL maintainer="SBB Polarion Team <polarion-opensource@sbb.ch>"
+FROM registry.access.redhat.com/ubi9/ubi-minimal:9.7-1769056855@sha256:bb08f2300cb8d12a7eb91dddf28ea63692b3ec99e7f0fa71a1b300f2756ea829
+
 ARG APP_IMAGE_VERSION=0.0.0-dev
-
-ENV WORKING_DIR=/opt/polarion_requirements_inspector
-ENV POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION=$APP_IMAGE_VERSION
+ENV WORKING_DIR="/opt/requirements_inspector" \
+    POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION=${APP_IMAGE_VERSION} \
+    PYTHONUNBUFFERED=1 \
+    LOG_LEVEL=INFO \
+    PORT=9081 \
+    REQUEST_SIZE_LIMIT=16777216
 
 WORKDIR ${WORKING_DIR}
 
-COPY requirements.txt ${WORKING_DIR}/requirements.txt
-COPY README.md ${WORKING_DIR}/README.md
-COPY ./app/ ${WORKING_DIR}/app/
-COPY ./poetry.lock ${WORKING_DIR}
-COPY ./pyproject.toml ${WORKING_DIR}
+# Copy uv binary from source stage
+COPY --from=uv-source /uv /usr/local/bin/uv
 
-RUN pip install --no-cache-dir -r ${WORKING_DIR}/requirements.txt && poetry install
+# Install runtime dependencies using microdnf (UBI minimal)
+# Note: curl-minimal is already installed, shadow-utils provides useradd
+# hadolint ignore=DL3041
+RUN microdnf install -y \
+        ca-certificates \
+        shadow-utils \
+    && microdnf clean all
 
-ENTRYPOINT [ "poetry", "run", "python", "-m", "app.requirements_inspector_service" ]
+# Copy Python version file and dependency files
+COPY .tool-versions pyproject.toml uv.lock ./
+
+# Install Python via uv to /opt/python (version from .tool-versions file)
+ENV UV_PYTHON_INSTALL_DIR=/opt/python
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN PYTHON_VERSION=$(awk '/^python / {print $2}' .tool-versions) && \
+    uv python install "${PYTHON_VERSION}"
+
+# Install dependencies with cache mount
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev
+
+# Create build timestamp
+RUN BUILD_TIMESTAMP="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" && \
+    echo "${BUILD_TIMESTAMP}" > "${WORKING_DIR}/.build_timestamp"
+
+# Copy application code
+COPY ./app/*.py ${WORKING_DIR}/app/
+COPY entrypoint.sh ${WORKING_DIR}/entrypoint.sh
+RUN chmod +x ${WORKING_DIR}/entrypoint.sh
+
+# Add venv to PATH
+ENV PATH="/opt/requirements_inspector/.venv/bin:$PATH" \
+    PYTHONPATH=${WORKING_DIR}
+
+# Create and configure non-root user
+# Make Python installation readable by all users
+RUN chmod -R a+rX /opt/python && \
+    chmod -R a+rx ${WORKING_DIR}/.venv/bin && \
+    useradd -u 1000 -m -s /bin/bash appuser && \
+    chown -R appuser:appuser ${WORKING_DIR}
+
+# Switch to non-root user
+USER appuser
+
+EXPOSE ${PORT}
+
+# Healthcheck
+HEALTHCHECK --interval=5s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:${PORT}/version || exit 1
+
+ENTRYPOINT ["./entrypoint.sh"]
+
+# Security and metadata labels
+LABEL maintainer="SBB Polarion Team <polarion-opensource@sbb.ch>" \
+      org.opencontainers.image.title="Requirements Inspector Service (UBI)" \
+      org.opencontainers.image.description="API service for Requirements Inspection" \
+      org.opencontainers.image.vendor="SBB" \
+      org.opencontainers.image.security.caps.drop="ALL" \
+      org.opencontainers.image.security.no-new-privileges="true"
