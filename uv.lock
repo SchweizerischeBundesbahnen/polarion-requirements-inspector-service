@@ -258,16 +258,18 @@ requires-dist = [{ name = "spacy", specifier = ">=3.7.2,<3.8.0" }]
 
 [[package]]
 name = "fastapi"
-version = "0.115.12"
+version = "0.131.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "annotated-doc" },
     { name = "pydantic" },
     { name = "starlette" },
     { name = "typing-extensions" },
+    { name = "typing-inspection" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f4/55/ae499352d82338331ca1e28c7f4a63bfd09479b16395dce38cf50a39e2c2/fastapi-0.115.12.tar.gz", hash = "sha256:1e2c2a2646905f9e83d32f04a3f86aff4a286669c6c950ca95b5fd68c2602681", size = 295236, upload-time = "2025-03-23T22:55:43.822Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/91/32/158cbf685b7d5a26f87131069da286bf10fc9fbf7fc968d169d48a45d689/fastapi-0.131.0.tar.gz", hash = "sha256:6531155e52bee2899a932c746c9a8250f210e3c3303a5f7b9f8a808bfe0548ff", size = 369612, upload-time = "2026-02-22T16:38:11.252Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/50/b3/b51f09c2ba432a576fe63758bddc81f78f0c6309d9e5c10d194313bf021e/fastapi-0.115.12-py3-none-any.whl", hash = "sha256:e94613d6c05e27be7ffebdd6ea5f388112e5e430c8f7d6494a9d1d88d43e814d", size = 95164, upload-time = "2025-03-23T22:55:42.101Z" },
+    { url = "https://files.pythonhosted.org/packages/ff/94/b58ec24c321acc2ad1327f69b033cadc005e0f26df9a73828c9e9c7db7ce/fastapi-0.131.0-py3-none-any.whl", hash = "sha256:ed0e53decccf4459de78837ce1b867cd04fa9ce4579497b842579755d20b405a", size = 103854, upload-time = "2026-02-22T16:38:09.814Z" },
 ]
 
 [[package]]
@@ -567,8 +569,8 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "fastapi", specifier = "==0.115.12" },
-    { name = "python-requirements-inspector", url = "https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl" },
+    { name = "fastapi", specifier = "==0.131.0" },
+    { name = "python-requirements-inspector", url = "https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.1.0/python_requirements_inspector-4.1.0-py3-none-any.whl" },
     { name = "uvicorn", specifier = "==0.34.2" },
 ]
 
@@ -705,8 +707,8 @@ wheels = [
 
 [[package]]
 name = "python-requirements-inspector"
-version = "4.0.0"
-source = { url = "https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl" }
+version = "4.1.0"
+source = { url = "https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.1.0/python_requirements_inspector-4.1.0-py3-none-any.whl" }
 dependencies = [
     { name = "de-core-news-md" },
     { name = "en-core-web-md" },
@@ -714,7 +716,7 @@ dependencies = [
     { name = "spacy-language-detection" },
 ]
 wheels = [
-    { url = "https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.0.0/python_requirements_inspector-4.0.0-py3-none-any.whl", hash = "sha256:a226f35e40de166bf5e494cb48cc2df0e3e35375572aba37058bbfe41fe595da" },
+    { url = "https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.1.0/python_requirements_inspector-4.1.0-py3-none-any.whl", hash = "sha256:79213131cb9db2a16e3847874ac5a6fbb3d9f34bd5914bb75d828edeb99a1e02" },
 ]
 
 [package.metadata]
