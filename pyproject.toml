@@ -7,11 +7,11 @@ authors = [
 ]
 license = "Apache-2.0"
 readme = "README.md"
-requires-python = ">=3.12,<3.13"
+requires-python = ">=3.13,<3.14"
 
 dependencies = [
-    "python-requirements-inspector @ https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.1.0/python_requirements_inspector-4.1.0-py3-none-any.whl",
-    "fastapi==0.133.0",
+    "python-requirements-inspector @ https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.2.0/python_requirements_inspector-4.2.0-py3-none-any.whl",
+    "fastapi==0.133.1",
     "uvicorn==0.41.0",
 ]
 
@@ -34,7 +34,7 @@ test = [
 # Set to false because this project is an application, not a library
 package = false
 override-dependencies = [
-    "numpy>=1.25,<2.0"  # Compatible with spacy 3.7.5 and thinc 8.2.4
+    "numpy>=2.0"  # numpy 1.x has no Python 3.13 wheels; spacy 3.8.x / thinc 8.3.x support numpy 2.x
 ]
 
 [tool.setuptools]
@@ -79,7 +79,7 @@ line-ending = "lf"
 [tool.mypy]
 explicit_package_bases = true
 disallow_untyped_defs = true
-exclude = "tests/.*"
+exclude = ["tests/.*", "venv/.*", "\\.tox/.*"]
 install_types = true
 non_interactive = true
 
