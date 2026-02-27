@@ -90,15 +90,6 @@ wheels = [
 ]
 
 [[package]]
-name = "chardet"
-version = "6.0.0.post1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/7f/42/fb9436c103a881a377e34b9f58d77b5f503461c702ff654ebe86151bcfe9/chardet-6.0.0.post1.tar.gz", hash = "sha256:6b78048c3c97c7b2ed1fbad7a18f76f5a6547f7d34dbab536cc13887c9a92fa4", size = 12521798, upload-time = "2026-02-22T15:09:17.925Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/66/42/5de54f632c2de53cd3415b3703383d5fff43a94cbc0567ef362515261a21/chardet-6.0.0.post1-py3-none-any.whl", hash = "sha256:c894a36800549adf7bb5f2af47033281b75fdfcd2aa0f0243be0ad22a52e2dcb", size = 627245, upload-time = "2026-02-22T15:09:15.876Z" },
-]
-
-[[package]]
 name = "charset-normalizer"
 version = "3.4.4"
 source = { registry = "https://pypi.org/simple" }
@@ -620,7 +611,7 @@ test = [
     { name = "docker", specifier = "==7.1.0" },
     { name = "httpx", specifier = "==0.28.1" },
     { name = "pytest", specifier = "==9.0.2" },
-    { name = "tox", specifier = "==4.45.0" },
+    { name = "tox", specifier = "==4.46.0" },
 ]
 
 [[package]]
@@ -1022,11 +1013,10 @@ wheels = [
 
 [[package]]
 name = "tox"
-version = "4.45.0"
+version = "4.46.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cachetools" },
-    { name = "chardet" },
     { name = "colorama" },
     { name = "filelock" },
     { name = "packaging" },
@@ -1035,9 +1025,9 @@ dependencies = [
     { name = "pyproject-api" },
     { name = "virtualenv" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9c/ea/9af964c08db7f08d31b296201191157979443b4dbfbbada41d2539d8bba3/tox-4.45.0.tar.gz", hash = "sha256:c0ce50ce0f7ace524cca9cf85d4a9fbd8e338aaa830e33521d3355f3f2f97c05", size = 246134, upload-time = "2026-02-23T19:47:45.827Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/bb/ba/140537bbf7dd267b37a1519ac1451b6c062d300cb64b7b273dfa1b2af9aa/tox-4.46.0.tar.gz", hash = "sha256:b9d1aa187101dae184b7e6552f3b1ff85461e9e32f078851426e35a3c2009bc1", size = 249296, upload-time = "2026-02-24T17:53:36.171Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/78/b3/c38c4b790e1447ccb2457cf626e7cf429ec989fb741fcaaa10c98bc07f4d/tox-4.45.0-py3-none-any.whl", hash = "sha256:a9910fab652c9b378659a4d13a2cbdaebd3737c60bd1a96b7b573a89824f4e7c", size = 199116, upload-time = "2026-02-23T19:47:44.248Z" },
+    { url = "https://files.pythonhosted.org/packages/e2/15/e344f22ae5adce77769cb93f03635674df40de2604e98a71a3193f632766/tox-4.46.0-py3-none-any.whl", hash = "sha256:828f0a119a22028dbff7495d288e3601406478ab20c97891f66be5516d72e4c3", size = 200281, upload-time = "2026-02-24T17:53:34.228Z" },
 ]
 
 [[package]]
