@@ -3,6 +3,16 @@
   "extends": [
     "github>SchweizerischeBundesbahnen/casc-renovate-preset-polarion-docker"
   ],
+  "packageRules": [
+    {
+      "description": "python-requirements-inspector is an internal package - no stability wait needed for SBB releases",
+      "matchManagers": ["custom.regex"],
+      "matchPackageNames": [
+        "SchweizerischeBundesbahnen/python-requirements-inspector"
+      ],
+      "minimumReleaseAge": "0 days"
+    }
+  ],
   "customManagers": [
     {
       "customType": "regex",
