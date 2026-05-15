@@ -19,7 +19,7 @@ dependencies = [
 dev = [
     "pre-commit==4.6.0",
     "ruff==0.15.12",
-    "mypy==2.0.0",
+    "mypy==2.1.0",
 ]
 test = [
     "tox==4.53.1",
