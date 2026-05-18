@@ -7,6 +7,8 @@ on:
     branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
+permissions:
+  contents: read
 env:
   REGISTRY: ghcr.io
   REGISTRY_USERNAME: ${{ github.actor }}
@@ -16,14 +18,14 @@ jobs:
   verify-with-tox:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
+      pull-requests: write  # Required for SonarCloud to comment on PRs and update status
     steps:
       - name: 📄 Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
-          fetch-depth: 1
           persist-credentials: false
+          fetch-depth: 0  # Full history required for SonarCloud analysis
       - name: Set up Python from .tool-versions
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6.2.0
         with:
@@ -33,12 +35,12 @@ jobs:
         with:
           enable-cache: true
       - name: 🧱 Install dependencies
-        run: uv sync --all-groups
+        run: uv sync --all-groups --locked
       - name: 🧪 Run tests
         run: uv run tox
       - name: SonarCloud scan for PR
         uses: sonarsource/sonarqube-scan-action@59db25f34e16620e48ab4bb9e4a5dce155cb5432  # v8
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && github.event.repository.visibility == 'public'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -47,7 +49,7 @@ jobs:
             -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
       - name: SonarCloud scan for Push
         uses: sonarsource/sonarqube-scan-action@59db25f34e16620e48ab4bb9e4a5dce155cb5432  # v8
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && github.event.repository.visibility == 'public'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -55,30 +57,22 @@ jobs:
           args: |
             -Dsonar.branch.name=${{ github.head_ref }}
       - name: Docker Hadolint
-        uses: hadolint/hadolint-action@2332a7b74a6de0dda2e2221d575162eba76ba5e5
+        uses: hadolint/hadolint-action@2332a7b74a6de0dda2e2221d575162eba76ba5e5  # v3.3.0
         with:
           format: tty
   release-please:
-    needs: verify-with-tox
-    runs-on: ubuntu-latest
     if: github.event_name != 'pull_request' && github.ref_name == 'main'
+    uses: SchweizerischeBundesbahnen/github-workflows-polarion/.github/workflows/reusable-release-please.yml@main
     permissions:
       contents: write
       pull-requests: write
-      issues: write
-    steps:
-      - name: 🚀 release-please
-        id: release
-        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7  # v5
-        with:
-          release-type: simple
-          include-v-in-tag: false
-    outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-      version: ${{ steps.release.outputs.version }}
+    with:
+      release-type: simple
+      include-v-in-tag: false
   docker-build-and-publish:
-    needs: release-please
+    needs: [verify-with-tox, release-please]
     runs-on: ubuntu-latest
+    if: ${{ needs.release-please.outputs.release_created == 'true' }}
     permissions:
       contents: read
       packages: write
@@ -94,37 +88,25 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ env.REGISTRY_USERNAME }}
           password: ${{ env.REGISTRY_PASSWORD }}
-      - name: 🧱 Prepare tags for Docker meta
-        id: tags
-        env:
-          # When release-please is skipped, these values will be empty
-          release_created: ${{ needs.release-please.outputs.release_created }}
-          version: ${{ needs.release-please.outputs.version }}
-        run: |
-          tags=""
-          if [[ "$release_created" = 'true' ]]; then
-            tags="type=semver,pattern={{version}},value=$version
-          type=semver,pattern={{major}},value=$version
-          type=semver,pattern={{major}}.{{minor}},value=$version"
-          else
-            tags="type=ref,event=branch
-          type=ref,event=pr"
-          fi
-          {
-            echo 'tags<<EOF'
-            echo "$tags"
-            echo EOF
-          } >> "$GITHUB_OUTPUT"
       - name: 🧱 Docker meta
         id: meta
         uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf  # v6.0.0
+        env:
+          version: ${{ needs.release-please.outputs.version }}
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: ${{ steps.tags.outputs.tags }}
+          tags: |
+            type=semver,pattern={{version}},value=${{ env.version }}
+            type=semver,pattern={{major}},value=${{ env.version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ env.version }}
       - name: 🧱 Set up QEMU
         uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a  # v4.0.0
       - name: 🧱 Set up Docker Buildx
         uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd  # v4.0.0
+        with:
+          driver-opts: |
+            image=moby/buildkit:latest
+            network=host
       - name: 📦 Build and push
         uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f  # v7.1.0
         with:
@@ -135,3 +117,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
           build-args: APP_IMAGE_VERSION=${{ steps.meta.outputs.version }}
+          # Enable BuildKit cache mounts for faster builds
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
