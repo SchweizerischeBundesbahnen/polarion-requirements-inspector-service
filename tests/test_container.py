@@ -46,17 +46,7 @@ def requirements_inspector_container():
     container = None
     try:
         client = docker.from_env()
-        subprocess.run([
-            "docker",
-            "build",
-            "--build-arg",
-            f"APP_IMAGE_VERSION={requirements_inspector_service_version}",
-            "--file",
-            "Dockerfile",
-            "--tag",
-            "requirements_inspector_service",
-            "."
-        ], check=True)
+        subprocess.run(["docker", "build", "--build-arg", f"APP_IMAGE_VERSION={requirements_inspector_service_version}", "--file", "Dockerfile", "--tag", "requirements_inspector_service", "."], check=True)
         container = client.containers.run(image="requirements_inspector_service", detach=True, name="requirements_inspector_service", ports={"9081": port}, init=True)
         time.sleep(5)
         yield container
@@ -64,12 +54,7 @@ def requirements_inspector_container():
         if container:
             container.stop()
             container.remove(v=True)
-        subprocess.run([
-            "docker",
-            "image",
-            "rm",
-            "requirements_inspector_service"
-        ], check=False)
+        subprocess.run(["docker", "image", "rm", "requirements_inspector_service"], check=False)
 
 
 @pytest.fixture(scope="module")
