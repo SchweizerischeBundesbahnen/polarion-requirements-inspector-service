@@ -27,7 +27,7 @@ test = [
     "docker==7.1.0",
     "pytest==9.1.1",
     "httpx==0.28.1",
-    "coverage==7.14.2",
+    "coverage==7.14.3",
 ]
 
 [tool.uv]
