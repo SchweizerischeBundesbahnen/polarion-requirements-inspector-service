@@ -22,7 +22,7 @@ dev = [
     "mypy==2.3.0",
 ]
 test = [
-    "tox==4.57.0",
+    "tox==4.57.1",
     # for debug source code for pytest --> see tox.ini section [testenv]
     "docker==7.2.0",
     "pytest==9.1.1",
