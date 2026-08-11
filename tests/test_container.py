@@ -1,17 +1,18 @@
 import importlib
 import importlib.metadata
 import json
+import re
+import subprocess
 import sys
 import time
+from pathlib import Path
 from typing import NamedTuple
-import re
 
 import docker
 import pytest
 import requests
 from docker.models.containers import Container
 from python_requirements_inspector.type_definitions import RequirementsInspectorResponseItem, WorkItem
-import subprocess
 
 from app.constants import (
     POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER,
@@ -63,7 +64,7 @@ def test_params(requirements_inspector_container: Container):
     session = requests.Session()
     python_version_pattern = re.compile(r"python (\d\.\d{1,2}.\d{1,2})")
     python_version = ""
-    with open(".tool-versions", "r", encoding="utf-8") as tool_versions:
+    with Path(".tool-versions").open(encoding="utf-8") as tool_versions:
         match = re.search(python_version_pattern, tool_versions.read())
         if not match:
             raise ValueError("Python version not found")

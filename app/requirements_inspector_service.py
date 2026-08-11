@@ -9,10 +9,12 @@ import sys
 from app.constants import POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER
 from app.requirements_inspector_controller import start_server
 
+logger = logging.getLogger(__name__)
+
 
 def main(port: int, request_size_limit: int, log_level: str) -> None:
     logging.getLogger().setLevel(logging.INFO)
-    logging.info("Requirements Inspector Service running on port: %d", port)
+    logger.info("Requirements Inspector Service running on port: %d", port)
     logging.getLogger().setLevel(log_level.upper())
 
     polarion_requirements_inspector_version = importlib.metadata.version("python-requirements-inspector")
