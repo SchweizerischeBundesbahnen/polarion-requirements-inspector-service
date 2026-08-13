@@ -13,7 +13,10 @@ logger = logging.getLogger(__name__)
 
 
 def main(port: int, request_size_limit: int, log_level: str) -> None:
-    logging.getLogger().setLevel(logging.INFO)
+    # Install a handler before logging anything. The module-level logging.info
+    # used to do this implicitly; a named logger has no such fallback and would
+    # drop the line at lastResort, whose level is WARNING.
+    logging.basicConfig(level=logging.INFO)
     logger.info("Requirements Inspector Service running on port: %d", port)
     logging.getLogger().setLevel(log_level.upper())
 
