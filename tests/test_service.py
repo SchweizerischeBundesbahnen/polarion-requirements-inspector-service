@@ -1,10 +1,9 @@
 import logging
 import os
+from unittest.mock import patch
 
 from app.constants import POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER
-from app.requirements_inspector_service import main
-from unittest.mock import patch
-from app.requirements_inspector_service import parse_args
+from app.requirements_inspector_service import main, parse_args
 
 
 def test_sys_exit():
