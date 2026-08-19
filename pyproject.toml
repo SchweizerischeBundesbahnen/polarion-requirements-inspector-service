@@ -15,6 +15,10 @@ dependencies = [
     "uvicorn==0.52.3",
 ]
 
+[project.urls]
+Homepage = "https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service"
+Repository = "https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service"
+
 [dependency-groups]
 dev = [
     "pre-commit==4.6.2",
