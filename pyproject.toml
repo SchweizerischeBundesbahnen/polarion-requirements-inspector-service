@@ -10,9 +10,11 @@ readme = "README.md"
 requires-python = ">=3.13,<3.14"
 
 dependencies = [
-    "python-requirements-inspector @ https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.2.0/python_requirements_inspector-4.2.0-py3-none-any.whl",
+    "python-requirements-inspector @ https://github.com/SchweizerischeBundesbahnen/python-requirements-inspector/releases/download/4.2.1/python_requirements_inspector-4.2.1-py3-none-any.whl",
     "fastapi==0.141.1",
     "uvicorn==0.52.1",
+    # pinning version to avoid security issues
+    "urllib3==2.7.0",
 ]
 
 [dependency-groups]
