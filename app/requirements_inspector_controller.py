@@ -10,13 +10,16 @@ from typing import TYPE_CHECKING, TypedDict
 
 import uvicorn
 from fastapi import FastAPI, HTTPException, Request, Response
-from python_requirements_inspector.workitem_analyzer import WorkitemAnalyzer  # type: ignore
+from python_requirements_inspector.workitem_analyzer import WorkitemAnalyzer  # type: ignore[import-untyped]
 
 from app.constants import POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER, POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER, PYTHON_VERSION_HEADER
 from app.type_definitions import VersionSchema, WorkItemSchema
 
 if TYPE_CHECKING:
-    from python_requirements_inspector.type_definitions import RequirementsInspectorResponseItem  # type: ignore
+    from python_requirements_inspector.type_definitions import RequirementsInspectorResponseItem  # type: ignore[import-untyped]
+
+
+logger = logging.getLogger(__name__)
 
 
 class Config(TypedDict):
@@ -40,11 +43,10 @@ async def check_request_size(request: Request, call_next: Callable[[Request], Aw
     if size > config["request_size_limit"]:
         return Response("JSON Body too large", status_code=413, media_type="plain/text")
 
-    response = await call_next(request)
-    return response
+    return await call_next(request)
 
 
-@app.get("/version", response_model=VersionSchema)
+@app.get("/version")
 async def version() -> VersionSchema:
     """
     Returns:
@@ -87,7 +89,8 @@ async def inspect_workitems(work_items: list[WorkItemSchema]) -> Response:
             media_type="application/json",
             status_code=200,
         )
-    except Exception as e:  # pylint: disable=broad-except
+    # This is the HTTP boundary: it must answer 500 rather than leak the exception.
+    except Exception as e:  # noqa: BLE001
         return process_error(e, "Unknown exception handled during processing", 500)
 
 
@@ -119,5 +122,5 @@ def process_error(e: Exception, err_msg: str, status: int) -> Response:
     Returns:
         flask.Response: Flask Response object sent back to the client
     """
-    logging.exception(e)
-    raise HTTPException(status_code=status, detail=err_msg)
+    logger.error("%s: %s", err_msg, e, exc_info=e)
+    raise HTTPException(status_code=status, detail=err_msg) from e
