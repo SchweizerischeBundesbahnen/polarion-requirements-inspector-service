@@ -59,13 +59,13 @@ RUN chmod -R a+rX /opt/python && \
     chown -R appuser:appuser ${WORKING_DIR}
 
 # Switch to non-root user
-USER appuser
+USER 1000:1000
 
 EXPOSE ${PORT}
 
 # Healthcheck
 HEALTHCHECK --interval=5s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:${PORT}/version || exit 1
+  CMD ["sh", "-c", "curl -f http://localhost:${PORT}/version || exit 1"]
 
 ENTRYPOINT ["./entrypoint.sh"]
 
