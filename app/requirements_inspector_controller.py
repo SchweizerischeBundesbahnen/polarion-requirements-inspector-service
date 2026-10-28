@@ -5,7 +5,6 @@ Module containing the flask app running the python-requirements-inspector-servic
 import json
 import logging
 import platform
-from collections.abc import Awaitable, Callable
 from typing import TYPE_CHECKING, TypedDict
 
 import uvicorn
@@ -16,6 +15,8 @@ from app.constants import POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER
 from app.type_definitions import VersionSchema, WorkItemSchema
 
 if TYPE_CHECKING:
+    from collections.abc import Awaitable, Callable
+
     from python_requirements_inspector.type_definitions import RequirementsInspectorResponseItem  # type: ignore[import-untyped]
 
 
