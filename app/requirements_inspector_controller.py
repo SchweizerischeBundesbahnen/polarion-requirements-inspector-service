@@ -78,7 +78,8 @@ async def inspect_workitems(work_items: list[WorkItemSchema]) -> Response:
     try:
         work_item_analyzer = WorkitemAnalyzer()
         for work_item in work_items:
-            # model_dump() is typed as dict[str, Any]; WorkItemSchema validates the WorkItem fields.
+            # The cast only satisfies the type checker: the dump is not guaranteed to be a complete WorkItem. All WorkItemSchema fields are
+            # optional (exclude_none drops unset ones) and extra keys are allowed, but the analyzer reads the fields with .get(), so a partial dict works.
             work_item_analyzer.analyze_workitem(cast("WorkItem", work_item.model_dump(exclude_none=True)))
         output_data: list[RequirementsInspectorResponseItem] = work_item_analyzer.get_collected_data()
         return Response(
