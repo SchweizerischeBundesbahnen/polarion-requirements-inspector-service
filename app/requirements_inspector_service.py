@@ -1,7 +1,7 @@
 """Start and run Polarion Requirements Inspector Service with args"""
 
 import argparse
-import importlib
+import importlib.metadata
 import logging
 import os
 import sys
