@@ -23,7 +23,7 @@ Repository = "https://github.com/SchweizerischeBundesbahnen/polarion-requirement
 dev = [
     "pre-commit==4.7.0",
     "ruff==0.17.2",
-    "mypy==2.4.0",
+    "ty==0.0.91",
 ]
 test = [
     "tox==4.67.1",
@@ -149,12 +149,21 @@ line-ending = "lf"
 # The format half. Changing this means changing flake8-quotes above in step.
 quote-style = "double"
 
-[tool.mypy]
-explicit_package_bases = true
-disallow_untyped_defs = true
-exclude = ["tests/.*", "venv/.*", "\\.tox/.*"]
-install_types = true
-non_interactive = true
+[tool.ty.environment]
+python-version = "3.14"  # Match requires-python
+
+[tool.ty.src]
+# Same scope as the former mypy config: the application code, not the tests.
+include = ["app"]
+
+[tool.ty.terminal]
+# Fail on warning-level diagnostics too, so the gate does not depend on the ty default.
+error-on-warning = true
+
+[tool.ty.rules]
+unused-ignore-comment = "error"  # a stale "# ty: ignore" fails the check
+
+# ty has no equivalent of mypy's disallow_untyped_defs: missing annotations in app/ are enforced by ruff's ANN rules (see [tool.ruff.lint]).
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

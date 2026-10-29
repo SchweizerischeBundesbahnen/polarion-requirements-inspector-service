@@ -5,11 +5,11 @@ Module containing the flask app running the python-requirements-inspector-servic
 import json
 import logging
 import platform
-from typing import TYPE_CHECKING, TypedDict
+from typing import TYPE_CHECKING, TypedDict, cast
 
 import uvicorn
 from fastapi import FastAPI, HTTPException, Request, Response
-from python_requirements_inspector.workitem_analyzer import WorkitemAnalyzer  # type: ignore[import-untyped]
+from python_requirements_inspector.workitem_analyzer import WorkitemAnalyzer
 
 from app.constants import POLARION_REQUIREMENTS_INSPECTOR_SERVICE_VERSION_HEADER, POLARION_REQUIREMENTS_INSPECTOR_VERSION_HEADER, PYTHON_VERSION_HEADER
 from app.type_definitions import VersionSchema, WorkItemSchema
@@ -17,7 +17,7 @@ from app.type_definitions import VersionSchema, WorkItemSchema
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
 
-    from python_requirements_inspector.type_definitions import RequirementsInspectorResponseItem  # type: ignore[import-untyped]
+    from python_requirements_inspector.type_definitions import RequirementsInspectorResponseItem, WorkItem
 
 
 logger = logging.getLogger(__name__)
@@ -78,7 +78,9 @@ async def inspect_workitems(work_items: list[WorkItemSchema]) -> Response:
     try:
         work_item_analyzer = WorkitemAnalyzer()
         for work_item in work_items:
-            work_item_analyzer.analyze_workitem(work_item.model_dump(exclude_none=True))
+            # The cast only satisfies the type checker: the dump is not guaranteed to be a complete WorkItem. All WorkItemSchema fields are
+            # optional (exclude_none drops unset ones) and extra keys are allowed, but the analyzer reads the fields with .get(), so a partial dict works.
+            work_item_analyzer.analyze_workitem(cast("WorkItem", work_item.model_dump(exclude_none=True)))
         output_data: list[RequirementsInspectorResponseItem] = work_item_analyzer.get_collected_data()
         return Response(
             json.dumps(output_data),
