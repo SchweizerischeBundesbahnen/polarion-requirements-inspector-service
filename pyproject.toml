@@ -23,7 +23,7 @@ Repository = "https://github.com/SchweizerischeBundesbahnen/polarion-requirement
 dev = [
     "pre-commit==4.7.0",
     "ruff==0.17.3",
-    "ty==0.0.92",
+    "ty==0.0.93",
 ]
 test = [
     "tox==4.67.2",
