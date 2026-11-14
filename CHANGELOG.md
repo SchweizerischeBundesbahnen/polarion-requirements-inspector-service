@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.1.1](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/compare/v3.1.0...v3.1.1) (2026-11-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency fastapi to v0.162.4 ([4bfa49d](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/4bfa49dcbd5170de76956ba03c64e291a0b5db42))
+* **deps:** update dependency ty to v0.0.100 ([e03f839](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/e03f83989612bdb9a6c692305f40b10bbea4fc34))
+* **deps:** update dependency ty to v0.0.101 ([9f630dd](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/9f630ddf0c490a61708c5457cd19a86f7ee8bc31))
+* **deps:** update ghcr.io/astral-sh/uv docker tag to v0.13.8 ([33dc1c2](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/33dc1c28534a7c262a5da4d648fc9c0ad149c402))
+* **deps:** update registry.access.redhat.com/ubi9/ubi-minimal docker tag to v9.9-1793829856 ([f76e382](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/f76e382205f39d5962cc60d83d073e2ad478d3bf))
+* **deps:** update registry.access.redhat.com/ubi9/ubi-minimal docker tag to v9.9-1794467051 ([605aa3b](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/605aa3b58f04dafa98a6e8a0103edc6dbdc7c405))
+
 ## 3.1.0 (2026-11-11)
 
 
