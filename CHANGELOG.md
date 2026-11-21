@@ -1,5 +1,31 @@
 # Changelog
 
+## [3.1.1](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/compare/v3.1.0...v3.1.1) (2026-11-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency coverage to v7.17.3 ([291e21d](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/291e21da8c0eedfa673cedc67e8fd195194e9085))
+* **deps:** update dependency fastapi to v0.162.4 ([4bfa49d](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/4bfa49dcbd5170de76956ba03c64e291a0b5db42))
+* **deps:** update dependency fastapi to v0.162.5 ([bd9fb18](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/bd9fb1884f1cb64df0ebd02d539db0f5ecf50d6f))
+* **deps:** update dependency fastapi to v0.162.7 ([9f495ff](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/9f495fff4a548229aa939d43832f037e68a144fc))
+* **deps:** update dependency fastapi to v0.163.0 ([dfa3b20](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/dfa3b20e26f31ad37e38a8edf6ca45d3fb9770bb))
+* **deps:** update dependency fastapi to v0.163.1 ([8643885](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/8643885612402b746b0e8f7a273f7fe263943d5f))
+* **deps:** update dependency fastapi to v0.163.2 ([f2e5102](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/f2e510205b2851d6e46756c62a4c18692b2c5c6e))
+* **deps:** update dependency ruff to v0.17.5 ([11df407](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/11df4079c1c679a6e72f5fa4497821ca9f44774f))
+* **deps:** update dependency tox to v4.67.15 ([b8106a0](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/b8106a0c3abad10ce33dfaa5b6855bbe047de570))
+* **deps:** update dependency tox-uv to v1.37.9 ([9343866](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/934386617123b79a089e58f5a4b31b1b6b9323ec))
+* **deps:** update dependency ty to v0.0.100 ([e03f839](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/e03f83989612bdb9a6c692305f40b10bbea4fc34))
+* **deps:** update dependency ty to v0.0.101 ([9f630dd](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/9f630ddf0c490a61708c5457cd19a86f7ee8bc31))
+* **deps:** update dependency ty to v0.0.102 ([7da1090](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/7da10908c89064bbc649cea9ff8749b1e4a24e3c))
+* **deps:** update dependency ty to v0.0.104 ([89908c8](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/89908c835213b268dcb75c93e71da2de4096b8ca))
+* **deps:** update dependency ty to v0.0.105 ([5794127](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/5794127b34efcaa6e0c40d2ac08dabd1d9f19987))
+* **deps:** update ghcr.io/astral-sh/uv docker tag to v0.13.8 ([33dc1c2](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/33dc1c28534a7c262a5da4d648fc9c0ad149c402))
+* **deps:** update ghcr.io/astral-sh/uv docker tag to v0.13.9 ([53e79ff](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/53e79fff3730ff56512d2eb486b399d79c85627f))
+* **deps:** update registry.access.redhat.com/ubi9/ubi-minimal docker tag to v9.9-1793829856 ([f76e382](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/f76e382205f39d5962cc60d83d073e2ad478d3bf))
+* **deps:** update registry.access.redhat.com/ubi9/ubi-minimal docker tag to v9.9-1794467051 ([605aa3b](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/605aa3b58f04dafa98a6e8a0103edc6dbdc7c405))
+* **deps:** update registry.access.redhat.com/ubi9/ubi-minimal docker tag to v9.9-1795001629 ([199f63a](https://github.com/SchweizerischeBundesbahnen/polarion-requirements-inspector-service/commit/199f63ab3faf51b308ffbf5bbfb3e90119e549ca))
+
 ## 3.1.0 (2026-11-11)
 
 
